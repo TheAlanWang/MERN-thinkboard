@@ -4,7 +4,7 @@ import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
 
 dotenv.config(); 
-dotenv.config({ quiet: true });
+dotenv.config({ quiet: true }); //dotenv not to print any log
 
 const app = express();
 const PORT = process.env.PORT || 5001;
