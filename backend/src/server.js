@@ -6,25 +6,37 @@ import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
 
-dotenv.config();
-dotenv.config({ quiet: true }); //dotenv not to print any log
+dotenv.config(); // 只需要一次
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json()); // Middleware to parse JSON request bodies
-app.use(rateLimiter); // Apply rate limiting middleware
+// ✅ CORS：显式允许 GitHub Pages
+app.use(
+  cors({
+    origin: ["https://thealanwang.github.io"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: false,
+  })
+);
 
-// app.use((req, res, next) => {
-//     console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
-//     next(); // Call the next middleware or route handler
-// });
 
+app.use(express.json());
+
+app.use(rateLimiter);
+
+// health check
+app.get("/api/health", (req, res) => res.json({ ok: true }));
+
+// 
 app.use("/api/notes", notesRoutes);
 
+// DB connection and server start
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server started on ${PORT}`);
   });
+}).catch(err => {
+  console.error("DB connection failed:", err);
+  process.exit(1);
 });
