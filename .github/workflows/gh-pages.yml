@@ -28,16 +28,17 @@ jobs:
           node-version: '20'
 
       - name: Install
-        run: npm ci
+        run: npm ci || npm i
 
       - name: Build
         run: npm run build
-
+        env:
+          VITE_API_BASE: ${{ secrets.VITE_API_BASE }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: frontend/dist 
+          path: frontend/dist
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
