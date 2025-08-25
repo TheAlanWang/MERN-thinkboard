@@ -6,12 +6,12 @@ import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
 
-dotenv.config(); // 只需要一次
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// ✅ CORS：显式允许 GitHub Pages
+
 app.use(
   cors({
     origin: ["https://thealanwang.github.io"],
@@ -28,7 +28,7 @@ app.use(rateLimiter);
 // health check
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 
-// 
+// notes routes
 app.use("/api/notes", notesRoutes);
 
 // DB connection and server start
