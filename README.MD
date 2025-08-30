@@ -66,6 +66,9 @@ MERN-thinkboard/
 └── README.md
 ```
 
+## 📚 Documentation
+For step-by-step development notes, see the [docs](docs/README.md) directory.
+
 ---
 
 ## ⚙️ Local Development
