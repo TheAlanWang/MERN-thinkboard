@@ -3,10 +3,8 @@
 <img src="./docs/demo.gif" alt="Demo" width="500" />
 
 A full-stack note-taking application built with the **MERN stack (MongoDB, Express, React, Node.js)**.  
-The project is deployed with a split architecture:  
-- **Frontend** hosted on [GitHub Pages](https://thealanwang.github.io/MERN-thinkboard)  
-- **Backend API** deployed on [Render](https://mern-thinkboard-xxxx.onrender.com)  
-- **Database** on MongoDB Atlas
+Designed for a split architecture so the frontend and backend can be hosted independently.  
+Includes guidance for local development and self-managed deployment.
 
 ---
 
@@ -15,8 +13,8 @@ The project is deployed with a split architecture:
 - 🔗 **Frontend–Backend Separation**: React + Vite on frontend, Express + Node.js on backend  
 - ☁️ **Cloud Database**: MongoDB Atlas  
 - 🔒 **Rate Limiting**: Prevents abuse using Upstash Redis and `express-rate-limit`  
-- 🌍 **CORS Support**: Configured for GitHub Pages → Render API calls  
-- 🚀 **CI/CD Automation**: GitHub Actions for automatic deployment to Pages  
+- 🌍 **CORS Support**: Configurable for separate frontend/backend origins  
+- 🚀 **CI/CD Ready**: Workflow files and scripts are set up for automation  
 
 ---
 
@@ -37,9 +35,9 @@ The project is deployed with a split architecture:
 - dotenv  
 
 **Deployment**  
-- Frontend → GitHub Pages  
-- Backend → Render  
-- Database → MongoDB Atlas  
+- Frontend → Static build (host on any static site/CDN)  
+- Backend → Node.js host of your choice  
+- Database → MongoDB Atlas or compatible MongoDB service  
 
 ---
 
@@ -63,7 +61,7 @@ MERN-thinkboard/
 │   ├── index.html
 │   └── package.json
 │
-├── .github/workflows/    # GitHub Actions for Pages deployment
+├── .github/workflows/    # CI/CD workflow files
 │   └── gh-pages.yml
 └── README.md
 ```
@@ -123,67 +121,27 @@ Frontend runs at → http://localhost:5173
 
 ## 🚀 Deployment
 
-### Backend → Render
-1. Go to https://render.com → New Web Service  
-2. Root directory: `backend`  
-3. **Build Command**:
+### Backend (self-managed host)
+1. Ensure production env vars are set (`MONGO_URI`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `NODE_ENV=production`, and any port override).  
+2. From `backend/`, install dependencies:  
    ```bash
-   npm install
-   ```
-   **Start Command**:
+   npm ci
+   ```  
+3. Start the server with your process manager of choice:  
    ```bash
    node src/server.js
-   ```
-4. Add environment variables in Render Dashboard:
-   - `MONGO_URI`
-   - `UPSTASH_REDIS_REST_URL`
-   - `UPSTASH_REDIS_REST_TOKEN`
-   - `NODE_ENV=production`  
-5. Access:
-   - https://mern-thinkboard-xxxx.onrender.com/api/health  
-   - https://mern-thinkboard-xxxx.onrender.com/api/notes
+   ```  
+4. Expose the chosen port publicly and attach your custom domain or load balancer as needed.
 
----
-
-### Frontend → GitHub Pages
-Configured with `.github/workflows/gh-pages.yml`:
-
-```yaml
-name: Deploy frontend to GitHub Pages
-on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'frontend/**'
-      - '.github/workflows/gh-pages.yml'
-  workflow_dispatch:
-jobs:
-  build-deploy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm ci || npm i
-      - run: npm run build
-        env:
-          VITE_API_BASE: ${{ secrets.VITE_API_BASE }}
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: frontend/dist
-      - uses: actions/deploy-pages@v4
-```
-
-#### GitHub Secrets
-In **Settings → Secrets → Actions**, add:
-- `VITE_API_BASE=https://mern-thinkboard-xxxx.onrender.com/api`
-
-Then every push to `main` auto-builds & deploys.  
-👉 Live: https://thealanwang.github.io/MERN-thinkboard/
+### Frontend (static hosting)
+1. Set `VITE_API_BASE` to the public URL of your backend API.  
+2. From `frontend/`, build the static bundle:  
+   ```bash
+   npm ci
+   npm run build
+   ```  
+3. Deploy the `frontend/dist` output to any static host or CDN. Update DNS to point your site domain to that host.  
+4. Verify requests from the deployed frontend succeed against the deployed API; adjust CORS settings in the backend if necessary.
 
 ---
 
