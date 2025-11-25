@@ -1,12 +1,13 @@
 # MERN ThinkBoard 📝
 
+<img src="./docs/demo.gif" alt="Demo" width="500" />
+
 A full-stack note-taking application built with the **MERN stack (MongoDB, Express, React, Node.js)**.  
 The project is deployed with a split architecture:  
 - **Frontend** hosted on [GitHub Pages](https://thealanwang.github.io/MERN-thinkboard)  
 - **Backend API** deployed on [Render](https://mern-thinkboard-xxxx.onrender.com)  
 - **Database** on MongoDB Atlas
 
-<img src="./docs/demo.gif" alt="Demo" width="500" />
 ---
 
 ## ✨ Features
