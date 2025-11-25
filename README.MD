@@ -6,7 +6,7 @@ The project is deployed with a split architecture:
 - **Backend API** deployed on [Render](https://mern-thinkboard-xxxx.onrender.com)  
 - **Database** on MongoDB Atlas
 
-![Demo](./docs/demo.gif)
+<img src="./docs/demo.gif" alt="Demo" width="500" />
 ---
 
 ## ✨ Features
